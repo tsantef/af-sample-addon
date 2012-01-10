@@ -17,26 +17,23 @@ $addon_config = nil
 
 # SSO 
 get '/:addon_name/resources/:resource_id' do
-      puts red "1"
-  if load_config
-        puts red "ZZZ"
-    timestamp = Time.now.to_i
-    sso_salt = $addon_config['sso_salt']
-    id = $addon_config['id']
-        puts red "ZZZ"
-    authstring = id.to_s + ':' + sso_salt + ':' + params['timestamp'].to_s
-        puts red "ZZZ"
-    token = Digest::SHA1.hexdigest(authstring)
-    puts red "ZZZ"
-    if token == params['token']
-      res = AddonResources.find_by_id(params['resource_id'])
-      puts red "ZZZ"
-      puts red id if res.nil?
-      throw(:halt, [404,  "Not Found\n"]) if res.nil?
-      return "SSO URL for #{id}"
+  timestamp = Time.now.to_i
+  client_timestamp = params['timestamp'].to_i
+  if (client_timestamp > timestamp - 10) && (timestamp < client_timestamp + 30) # make sure the link is less than 30 seconds old
+    if load_config
+      timestamp = Time.now.to_i
+      sso_salt = $addon_config['sso_salt']
+      resource_id = params['resource_id']
+      authstring = resource_id.to_s + ':' + sso_salt + ':' + params['timestamp'].to_s
+      token = Digest::SHA1.hexdigest(authstring)
+      if token == params['token']
+        res = AddonResources.find_by_id(resource_id)
+        throw(:halt, [404, "Not Found\n"]) if res.nil?
+        return "SSO URL for #{id}"
+      end
     end
+    throw(:halt, [404, "Not found\n"])
   end
-  throw(:halt, [404, "Not found\n"])
 end
 
 # Provision
