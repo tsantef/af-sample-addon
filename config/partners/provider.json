@@ -1,0 +1,9 @@
+{
+  "customer_key" : "customer_id",
+  "id":"afaddon",
+  "password":"NVUQ1OqNtuc74HiE",
+  "sso_salt":"0hsvrk6MMZH9xZnK", 
+  "config": {
+    "MYADDON_URL":"http://some.url.com"
+  }
+}

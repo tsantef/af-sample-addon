@@ -1,0 +1,11 @@
+{
+  "customer_key" : "heroku_id",
+  "id":"myaddon",
+  "password":"NVUQ1OqNtuc74HiE",
+  "sso_salt":"0hsvrk6MMZH9xZnK", 
+  "config": {
+    "HEROKU_URL":"http://some.url.com",
+    "HEROKU_VAR1":"cats",
+    "HEROKU_VAR2":"dogs"
+  }
+}
