@@ -12,7 +12,7 @@ ActiveRecord::Base.establish_connection(YAML::load(File.open('config/database.ym
 
 set :public_folder, File.dirname(__FILE__) + '/static'
 
-$addon_names = ['provider','heroku']
+$addon_names = ['myaddon','heroku']
 $addon_config = nil
 
 # SSO 

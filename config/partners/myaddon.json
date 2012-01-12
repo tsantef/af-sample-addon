@@ -1,0 +1,11 @@
+{
+  "customer_key" : "customer_id",
+  "id":"myaddon",
+  "password":"cavef6azebRewruvecuch",
+  "sso_salt":"8ouy3ayLEyOA7HLAKO2Yo", 
+  "config": {
+    "MYADDON_URL":"http://some.url.com",
+    "MYADDON_VAR1":"cats",
+    "MYADDON_VAR2":"dogs"
+  }
+}

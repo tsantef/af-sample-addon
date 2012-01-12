@@ -1,5 +1,10 @@
 GEM
+  remote: http://rubygems.org/
   specs:
+    bson (1.5.2)
+    bson_ext (1.5.2)
+      bson (= 1.5.2)
+    logger (1.2.8)
     mime-types (1.16)
     rack (1.4.0)
     rack-protection (1.2.0)
@@ -19,6 +24,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bson_ext
+  logger
   rest-client
   sinatra-activerecord
   sqlite3
