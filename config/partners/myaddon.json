@@ -1,7 +1,7 @@
 {
-  "customer_key" : "customer_id",
   "id":"myaddon",
-  "password":"cavef6azebRewruvecuch",
+  "username":"myaddon",
+  "password":"NVUQ1OqNtuc74HiE",
   "sso_salt":"8ouy3ayLEyOA7HLAKO2Yo", 
   "config": {
     "MYADDON_URL":"http://some.url.com",

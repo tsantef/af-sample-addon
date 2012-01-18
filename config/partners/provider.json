@@ -1,9 +1,11 @@
 {
-  "customer_key" : "customer_id",
-  "id":"afaddon",
+  "id":"myaddon",
+  "username":"myaddon",
   "password":"NVUQ1OqNtuc74HiE",
-  "sso_salt":"0hsvrk6MMZH9xZnK", 
+  "sso_salt":"8ouy3ayLEyOA7HLAKO2Yo", 
   "config": {
-    "MYADDON_URL":"http://some.url.com"
+    "MYADDON_URL":"http://some.url.com",
+    "MYADDON_VAR1":"cats",
+    "MYADDON_VAR2":"dogs"
   }
 }

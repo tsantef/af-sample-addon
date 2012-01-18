@@ -1,10 +1,3 @@
-def get_app_name
-  if !$addon_names.include?(params[:addon_name])
-    throw(:halt, [400, "Bad Request: Unknown addon #{params[:addon_name]}\n"])
-  end
-  params[:addon_name]
-end
-
 def protected!
   unless authorized?
     response['WWW-Authenticate'] = %(Basic realm="Restricted Area")
@@ -13,9 +6,8 @@ def protected!
 end
 
 def load_config
-  partner_name = get_app_name
-  config_path = "config/partners/#{partner_name}.json"
-  
+  config_path = "config/partners/#{params[:partner_name]}.json"
+
   if FileTest.exist?(config_path)
     config_file = File.open(config_path, 'r')
     config_json = config_file.readlines.to_s
@@ -28,7 +20,7 @@ end
 
 def authorized?
   if load_config
-  
+
     @auth ||=  Rack::Auth::Basic::Request.new(request.env)
 
     if @auth.credentials.nil?
@@ -37,7 +29,7 @@ def authorized?
       puts @auth.credentials.inspect
     end
 
-    @auth.provided? && @auth.basic? && @auth.credentials && @auth.credentials == [$addon_config['id'], $addon_config['password']]
+    @auth.provided? && @auth.basic? && @auth.credentials && @auth.credentials == [$addon_config['username'], $addon_config['password']]
   else
     puts "Request from unknown partner [ " + red(partner_name) + " ]"
     false
