@@ -14,27 +14,6 @@ set :public_folder, File.dirname(__FILE__) + '/static'
 
 $addon_config = nil
 
-# SSO 
-get '/:partner_name/resources/:resource_id' do
-  timestamp = Time.now.to_i
-  client_timestamp = params['timestamp'].to_i
-  if (client_timestamp > timestamp - 10) && (timestamp < client_timestamp + 30) # make sure the link is less than 30 seconds old
-    if load_config
-      timestamp = Time.now.to_i
-      sso_salt = $addon_config['sso_salt']
-      resource_id = params['resource_id']
-      authstring = resource_id.to_s + ':' + sso_salt + ':' + params['timestamp'].to_s
-      token = Digest::SHA1.hexdigest(authstring)
-      if token == params['token']
-        res = AddonResources.find_by_id(resource_id)
-        throw(:halt, [404, "Not Found\n"]) if res.nil?
-        return "<html><body><h2>myaddon</h2><p>SSO for #{params['resource_id']}</p></body></html>"
-      end
-    end
-    throw(:halt, [404, "Not found\n"])
-  end
-end
-
 # Provision
 post '/:partner_name/resources' do
   protected!
@@ -83,15 +62,15 @@ post '/:partner_name/resources' do
   api_response[:config] = $addon_config['config']
   api_response[:message] = "success"
 
-  # do async 
-  child = fork do
-    sleep(12)
-    payload = BSON::OrderedHash.new
-    payload[:id] = res.id
-    payload[:config] = $addon_config['config']
-    puts "Calling Back: " + bright("[ ") + bgreen(res.callback_url) + bright(" ]") 
-    response = RestClient.put res.callback_url, JSON.generate(payload), {:content_type => 'application/json', :accept => 'application/json'}
-  end
+  # do async. Uncomment below to put to the callback
+  #child = fork do
+  #  sleep(12)
+  #  payload = BSON::OrderedHash.new
+  #  payload[:id] = res.id
+  #  payload[:config] = $addon_config['config']
+  #  puts "Calling Back: " + bright("[ ") + bgreen(res.callback_url) + bright(" ]") 
+  #  response = RestClient.put res.callback_url, JSON.generate(payload), {:content_type => 'application/json', :accept => 'application/json'}
+  #end
 
   content_type :json
   puts api_response.to_json(:include => [:id, :message])
@@ -128,6 +107,27 @@ put '/:partner_name/resources/:resource_id' do
     end
 
     res.save!
+  end
+end
+
+# SSO
+get '/:partner_name/resources/:resource_id' do
+  timestamp = Time.now.to_i
+  client_timestamp = params['timestamp'].to_i
+  if (client_timestamp > timestamp - 10) && (timestamp < client_timestamp + 30) # make sure the link is less than 30 seconds old
+    if load_config
+      timestamp = Time.now.to_i
+      sso_salt = $addon_config['sso_salt']
+      resource_id = params['resource_id']
+      authstring = resource_id.to_s + ':' + sso_salt + ':' + params['timestamp'].to_s
+      token = Digest::SHA1.hexdigest(authstring)
+      if token == params['token']
+        res = AddonResources.find_by_id(resource_id)
+        throw(:halt, [404, "Not Found\n"]) if res.nil?
+        return "<html><body><h2>myaddon</h2><p>SSO for #{params['resource_id']}</p></body></html>"
+      end
+    end
+    throw(:halt, [404, "Not found\n"])
   end
 end
 
