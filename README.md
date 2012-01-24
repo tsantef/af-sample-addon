@@ -14,6 +14,11 @@ Demonstrates a basic addon implementation in sinatra.
     rake db:migrate
 
 
+## Usage ##
+
+    ruby app.rb
+
+
 Maintained by Tim Santeford.
 
 Released under the MIT license.
